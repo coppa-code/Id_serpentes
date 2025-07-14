@@ -92,6 +92,35 @@
             font-size: 18px;
         }
 
+        .question-image {
+            margin-top: 15px;
+            text-align: center;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .question-image.show {
+            opacity: 1;
+            max-height: 300px;
+            margin-bottom: 15px;
+        }
+
+        .question-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .image-caption {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
         .btn-container {
             display: flex;
             gap: 15px;
@@ -234,6 +263,10 @@
         <div class="content">
             <div id="flowchart">
                 <div class="question" id="question-text">Tem anéis coloridos?</div>
+                <div class="question-image" id="question-image">
+                    <img id="reference-image" src="" alt="Imagem de referência">
+                    <div class="image-caption" id="image-caption"></div>
+                </div>
                 <div class="btn-container">
                     <button class="btn btn-yes" id="yes-btn">
                         <i class="fas fa-check"></i> Sim
@@ -326,6 +359,14 @@
                 'scaled-tail': 'Tem cauda com escamas arrepiadas e ponta de osso?'
             };
 
+            // Mapeamento de imagens para cada pergunta
+            const imageMap = {
+                'proteroglyph': {
+                    url: 'https://github.com/coppa-code/Id_serpentes/raw/77f2b7c8abd9675ddc44024de6b57dc2765fd1e9/proteroglyph.jpg.webp',
+                    caption: 'Exemplo de dentes proteróglifos - dentes peçonhentos fixos na frente da boca'
+                }
+            };
+
             // Seletores de elementos
             const questionText = document.getElementById('question-text');
             const yesBtn = document.getElementById('yes-btn');
@@ -334,9 +375,24 @@
             const snakeInfoDiv = document.getElementById('snake-info');
             const restartBtn = document.getElementById('restart-btn');
             const flowchartDiv = document.getElementById('flowchart');
+            const questionImageDiv = document.getElementById('question-image');
+            const referenceImage = document.getElementById('reference-image');
+            const imageCaption = document.getElementById('image-caption');
 
             // Variável para armazenar o passo atual
             let currentStep = 'colored-rings';
+
+            // Função para mostrar/esconder imagem
+            function updateQuestionImage(step) {
+                if (imageMap[step]) {
+                    referenceImage.src = imageMap[step].url;
+                    referenceImage.alt = imageMap[step].caption;
+                    imageCaption.textContent = imageMap[step].caption;
+                    questionImageDiv.classList.add('show');
+                } else {
+                    questionImageDiv.classList.remove('show');
+                }
+            }
 
             // Função para lidar com a resposta
             function handleAnswer(isYes) {
@@ -349,6 +405,9 @@
                     // Próxima pergunta
                     currentStep = nextStep;
                     questionText.textContent = questionMap[currentStep];
+                    
+                    // Atualizar imagem
+                    updateQuestionImage(currentStep);
                     
                     // Adicionar animação sutil
                     questionText.style.opacity = '0';
@@ -388,6 +447,9 @@
                 currentStep = 'colored-rings';
                 questionText.textContent = questionMap[currentStep];
                 
+                // Atualizar imagem
+                updateQuestionImage(currentStep);
+                
                 // Esconde resultado
                 resultDiv.innerHTML = '';
                 resultDiv.className = 'result';
@@ -424,6 +486,7 @@
             
             // Inicia com a primeira pergunta
             questionText.textContent = questionMap[currentStep];
+            updateQuestionImage(currentStep);
         });
     </script>
 </body>
