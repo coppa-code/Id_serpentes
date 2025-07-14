@@ -103,22 +103,30 @@
 
         .question-image.show {
             opacity: 1;
-            max-height: 300px;
-            margin-bottom: 15px;
+            max-height: 500px;
+            margin-bottom: 20px;
         }
 
         .question-image img {
             max-width: 100%;
+            width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            min-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            border: 2px solid var(--color-info);
         }
 
         .image-caption {
-            font-size: 14px;
-            color: #bdc3c7;
-            margin-top: 8px;
-            font-style: italic;
+            font-size: 15px;
+            color: #ecf0f1;
+            margin-top: 12px;
+            font-weight: 500;
+            background-color: rgba(52, 152, 219, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-info);
         }
 
         .btn-container {
