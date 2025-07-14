@@ -244,6 +244,32 @@
             display: block;
         }
 
+        .safety-warning {
+            background-color: #e74c3c;
+            color: white;
+            border: 3px solid #c0392b;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 1.4;
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            animation: pulse-warning 2s infinite;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .safety-warning i {
+            font-size: 18px;
+            margin-right: 8px;
+            color: #fff;
+        }
+
         .restart-btn:active {
             opacity: 0.7;
         }
@@ -408,13 +434,33 @@
             // Variável para armazenar o passo atual
             let currentStep = 'colored-rings';
 
-            // Função para mostrar/esconder imagem
+            // Função para mostrar/esconder imagem e avisos de segurança
             function updateQuestionImage(step) {
+                // Remove avisos anteriores
+                const existingWarning = document.querySelector('.safety-warning');
+                if (existingWarning) {
+                    existingWarning.remove();
+                }
+
                 if (imageMap[step]) {
                     referenceImage.src = imageMap[step].url;
                     referenceImage.alt = imageMap[step].caption;
                     imageCaption.textContent = imageMap[step].caption;
                     questionImageDiv.classList.add('show');
+
+                    // Adicionar aviso de segurança para a pergunta sobre proteróglifas
+                    if (step === 'proteroglyph') {
+                        const warningDiv = document.createElement('div');
+                        warningDiv.className = 'safety-warning';
+                        warningDiv.innerHTML = `
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>ATENÇÃO!</strong><br>
+                            NÃO tente olhar os dentes da serpente!<br>
+                            Esta pergunta é apenas para identificação profissional.<br>
+                            Mantenha distância segura do animal.
+                        `;
+                        questionImageDiv.parentNode.insertBefore(warningDiv, questionImageDiv.nextSibling);
+                    }
                 } else {
                     questionImageDiv.classList.remove('show');
                 }
