@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Identificador de Cobras</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1a2c3a;
+            --bg-secondary: #2c3e50;
+            --color-primary: #ecf0f1;
+            --color-yes: #2ecc71;
+            --color-no: #e74c3c;
+            --color-info: #3498db;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--color-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            background-color: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            transition: var(--transition);
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: var(--color-info);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .question {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 2px solid var(--color-info);
+            color: var(--color-primary);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: var(--transition);
+            font-size: 18px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            -webkit-appearance: none;
+            touch-action: manipulation;
+        }
+
+        .btn-yes {
+            background-color: var(--color-yes);
+            color: white;
+        }
+
+        .btn-no {
+            background-color: var(--color-no);
+            color: white;
+        }
+
+        .btn:active {
+            opacity: 0.7;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .result.show {
+            display: flex;
+        }
+
+        .result-dangerous {
+            background-color: var(--color-no);
+            color: white;
+        }
+
+        .result-safe {
+            background-color: var(--color-yes);
+            color: white;
+        }
+
+        .snake-info {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .snake-info.show {
+            opacity: 1;
+            max-height: 500px;
+            padding: 20px;
+        }
+
+        .snake-info h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .snake-info p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .restart-btn {
+            background-color: var(--color-info);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: var(--transition);
+            display: none;
+            width: 100%;
+            -webkit-appearance: none;
+            touch-action: manipulation;
+        }
+
+        .restart-btn.show {
+            display: block;
+        }
+
+        .restart-btn:active {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                padding: 18px;
+                font-size: 20px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-snake"></i>
+            <h1>Identificador de Cobras</h1>
+        </div>
+        <div class="content">
+            <div id="flowchart">
+                <div class="question" id="question-text">Tem anéis coloridos?</div>
+                <div class="btn-container">
+                    <button class="btn btn-yes" id="yes-btn">
+                        <i class="fas fa-check"></i> Sim
+                    </button>
+                    <button class="btn btn-no" id="no-btn">
+                        <i class="fas fa-times"></i> Não
+                    </button>
+                </div>
+            </div>
+            <div id="result" class="result"></div>
+            <div id="snake-info" class="snake-info"></div>
+            <button id="restart-btn" class="restart-btn">Recomeçar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevenir comportamentos indesejados do iOS
+            function handleTouch() {
+                // Função vazia para habilitar eventos de toque no iOS
+            }
+            
+            document.addEventListener('touchstart', handleTouch, false);
+            document.addEventListener('touchend', handleTouch, false);
+
+            // Objeto com o fluxograma de decisões
+            const flowchart = {
+                'colored-rings': {
+                    yes: 'proteroglyph',
+                    no: 'lorealpit'
+                },
+                'proteroglyph': {
+                    yes: 'coral',
+                    no: 'not-dangerous'
+                },
+                'lorealpit': {
+                    yes: 'rattle',
+                    no: 'not-dangerous'
+                },
+                'rattle': {
+                    yes: 'cascavel',
+                    no: 'scaled-tail'
+                },
+                'scaled-tail': {
+                    yes: 'surucucu',
+                    no: 'jararaca'
+                }
+            };
+
+            // Informações detalhadas sobre cada tipo de cobra
+            const snakeInfo = {
+                'coral': {
+                    text: 'COBRA CORAL',
+                    dangerous: true,
+                    description: 'Extremamente venenosa. Possui anéis coloridos em vermelho, preto e amarelo. Evite contato e procure ajuda médica imediatamente em caso de picada!',
+                    icon: 'skull-crossbones'
+                },
+                'not-dangerous': {
+                    text: 'NÃO PERIGOSA',
+                    dangerous: false,
+                    description: 'Esta cobra não é considerada perigosa para humanos. No entanto, mantenha distância e trate qualquer animal silvestre com cautela.',
+                    icon: 'check-circle'
+                },
+                'cascavel': {
+                    text: 'CASCAVEL',
+                    dangerous: true,
+                    description: 'Muito perigosa. Facilmente identificada pelo chocalho na cauda. Possui veneno potente. Procure ajuda médica imediatamente em caso de picada!',
+                    icon: 'skull-crossbones'
+                },
+                'surucucu': {
+                    text: 'SURUCUCU',
+                    dangerous: true,
+                    description: 'Extremamente perigosa. Encontrada em regiões de mata. Possui veneno potente e comportamento agressivo. Procure ajuda médica imediatamente em caso de picada!',
+                    icon: 'skull-crossbones'
+                },
+                'jararaca': {
+                    text: 'JARARACA',
+                    dangerous: true,
+                    description: 'Muito perigosa. Comum em áreas rurais e de mata. Causa envenenamento grave se não tratada. Procure ajuda médica imediatamente em caso de picada!',
+                    icon: 'skull-crossbones'
+                }
+            };
+
+            // Mapeamento de perguntas
+            const questionMap = {
+                'colored-rings': 'Tem anéis coloridos?',
+                'proteroglyph': 'É proterógifa? (Dentes peçonhentos fixos na frente)',
+                'lorealpit': 'Tem fosseta loreal? (Cavidade entre o olho e a narina)',
+                'rattle': 'Tem chocalho na ponta da cauda?',
+                'scaled-tail': 'Tem cauda com escamas arrepiadas e ponta de osso?'
+            };
+
+            // Seletores de elementos
+            const questionText = document.getElementById('question-text');
+            const yesBtn = document.getElementById('yes-btn');
+            const noBtn = document.getElementById('no-btn');
+            const resultDiv = document.getElementById('result');
+            const snakeInfoDiv = document.getElementById('snake-info');
+            const restartBtn = document.getElementById('restart-btn');
+            const flowchartDiv = document.getElementById('flowchart');
+
+            // Variável para armazenar o passo atual
+            let currentStep = 'colored-rings';
+
+            // Função para lidar com a resposta
+            function handleAnswer(isYes) {
+                const nextStep = flowchart[currentStep][isYes ? 'yes' : 'no'];
+                
+                if (snakeInfo[nextStep]) {
+                    // Encontramos uma conclusão
+                    showResult(nextStep);
+                } else {
+                    // Próxima pergunta
+                    currentStep = nextStep;
+                    questionText.textContent = questionMap[currentStep];
+                    
+                    // Adicionar animação sutil
+                    questionText.style.opacity = '0';
+                    setTimeout(() => {
+                        questionText.style.opacity = '1';
+                    }, 100);
+                }
+            }
+
+            // Função para mostrar o resultado
+            function showResult(result) {
+                const snake = snakeInfo[result];
+                
+                // Esconde o fluxograma
+                flowchartDiv.style.display = 'none';
+                
+                // Mostra o resultado
+                resultDiv.innerHTML = `
+                    <i class="fas fa-${snake.icon}"></i>
+                    ${snake.text}
+                `;
+                resultDiv.className = `result ${snake.dangerous ? 'result-dangerous' : 'result-safe'} show`;
+                
+                // Mostra informações adicionais
+                snakeInfoDiv.innerHTML = `
+                    <h3>Informações</h3>
+                    <p>${snake.description}</p>
+                `;
+                snakeInfoDiv.classList.add('show');
+                
+                // Mostra botão de reiniciar
+                restartBtn.classList.add('show');
+            }
+
+            // Função para reiniciar
+            function restart() {
+                currentStep = 'colored-rings';
+                questionText.textContent = questionMap[currentStep];
+                
+                // Esconde resultado
+                resultDiv.innerHTML = '';
+                resultDiv.className = 'result';
+                
+                // Esconde informações
+                snakeInfoDiv.innerHTML = '';
+                snakeInfoDiv.classList.remove('show');
+                
+                // Esconde botão de reiniciar
+                restartBtn.classList.remove('show');
+                
+                // Mostra fluxograma
+                flowchartDiv.style.display = 'block';
+            }
+
+            // Adiciona eventos com preventDefault para evitar problemas no iOS
+            yesBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                handleAnswer(true);
+            });
+            
+            noBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                handleAnswer(false);
+            });
+            
+            restartBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                restart();
+            });
+            
+            // Corrige problema de clique no iOS
+            document.addEventListener('touchstart', function(){}, {passive: true});
+            
+            // Inicia com a primeira pergunta
+            questionText.textContent = questionMap[currentStep];
+        });
+    </script>
+</body>
+</html>
